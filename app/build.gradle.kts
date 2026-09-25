@@ -78,6 +78,16 @@ dependencies {
     implementation(libs.bundles.implementation.app)
 }
 
+configurations.all {
+    resolutionStrategy {
+        // androidx.core:core 1.14.0+ raises minSdk to 23 (this app supports minSdk 22). Pinning
+        // androidx-core in libs.versions.toml only sets what core-ktx *requests*; appcompat/material
+        // /lifecycle also pull in androidx.core:core transitively, and Gradle resolves conflicts to
+        // the highest requested version. Force it so a newer transitive request can't win.
+        force("androidx.core:core:${libs.versions.androidx.core.get()}")
+    }
+}
+
 licenseReport {
     // Run via `gradlew licenseReleaseReport`
     generateCsvReport = false

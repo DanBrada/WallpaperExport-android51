@@ -18,6 +18,11 @@
       "matchPackageNames": ["androidx.appcompat:appcompat"],
       "allowedVersions": "<1.8.0",
       "description": "appcompat 1.8.0+ requires minSdk 23, but this app supports minSdk 22"
+    },
+    {
+      "matchPackageNames": ["androidx.core:core-ktx"],
+      "allowedVersions": "<1.14.0",
+      "description": "androidx.core raises minSdk somewhere before 1.18.0 (exact cutover unconfirmed); pinned conservatively to the last confirmed minSdk-19 release, but this app only needs minSdk 22"
     }
   ]
 }

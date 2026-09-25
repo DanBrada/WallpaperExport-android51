@@ -17,6 +17,9 @@ updates:
         versions: [">=2.10.0"]
       - dependency-name: "androidx.appcompat:appcompat"
         versions: [">=1.8.0"]
+      # Exact minSdk-23 cutover version unconfirmed; pinned conservatively to 1.13.0
+      - dependency-name: "androidx.core:core-ktx"
+        versions: [">=1.14.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

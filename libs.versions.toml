@@ -9,7 +9,9 @@ licensereport = "0.9.8"
 # 1.8.0+ raises minSdk to 23 (this app supports minSdk 22); see renovate.json
 appcompat = "1.7.1"
 kotlinx-coroutines-android = "1.11.0"
-androidx-core = "1.18.0"
+# Pinned to the last confirmed minSdk-19 release; 1.14.0+ raises minSdk (this app supports minSdk
+# 22, but the exact cutover version wasn't confirmed, hence the conservative pin); see renovate.json
+androidx-core = "1.13.0"
 # Pinned below 2.10.0, which requires minSdk 23 (this app supports minSdk 22); see renovate.json
 lifecycle-viewmodel = "2.9.4"
 # Pinned below 1.14.0, which requires minSdk 23 (this app supports minSdk 22); see renovate.json
