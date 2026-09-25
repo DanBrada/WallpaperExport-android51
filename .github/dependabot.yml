@@ -9,6 +9,14 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    ignore:
+      # These all require minSdk 23+, but this app supports minSdk 22
+      - dependency-name: "com.google.android.material:material"
+        versions: [">=1.14.0"]
+      - dependency-name: "androidx.lifecycle:lifecycle-viewmodel-ktx"
+        versions: [">=2.10.0"]
+      - dependency-name: "androidx.appcompat:appcompat"
+        versions: [">=1.8.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

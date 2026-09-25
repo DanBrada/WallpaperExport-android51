@@ -2,5 +2,22 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["com.google.android.material:material"],
+      "allowedVersions": "<1.14.0",
+      "description": "material 1.14.0+ requires minSdk 23, but this app supports minSdk 22"
+    },
+    {
+      "matchPackageNames": ["androidx.lifecycle:lifecycle-viewmodel-ktx"],
+      "allowedVersions": "<2.10.0",
+      "description": "lifecycle 2.10.0+ requires minSdk 23, but this app supports minSdk 22"
+    },
+    {
+      "matchPackageNames": ["androidx.appcompat:appcompat"],
+      "allowedVersions": "<1.8.0",
+      "description": "appcompat 1.8.0+ requires minSdk 23, but this app supports minSdk 22"
+    }
   ]
 }
