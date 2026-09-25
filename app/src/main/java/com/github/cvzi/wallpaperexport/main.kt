@@ -57,6 +57,7 @@ import androidx.activity.result.contract.ActivityResultContracts.RequestPermissi
 import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.DragStartHelper
 import com.github.cvzi.wallpaperexport.databinding.ActivityAboutBinding
@@ -219,12 +220,18 @@ class MainActivity : ComponentActivity() {
                     ClipData.Item(uri)
                 )
                 imageView?.colorFilter = null
-                view.startDragAndDrop(
-                    clipData,
-                    View.DragShadowBuilder(view),
-                    null,
-                    View.DRAG_FLAG_GLOBAL or View.DRAG_FLAG_GLOBAL_URI_READ
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    view.startDragAndDrop(
+                        clipData,
+                        View.DragShadowBuilder(view),
+                        null,
+                        View.DRAG_FLAG_GLOBAL or View.DRAG_FLAG_GLOBAL_URI_READ
+                    )
+                } else {
+                    // Global drag flags (multi-window drag'n'drop) don't exist before Android N
+                    @Suppress("DEPRECATION")
+                    view.startDrag(clipData, View.DragShadowBuilder(view), null, 0)
+                }
             }
         }
 
@@ -463,7 +470,11 @@ class MainActivity : ComponentActivity() {
         var askForPermissionMessage = getString(R.string.ask_for_permission_message)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             askForPermissionMessage += "\n\nYou need to grant two permissions:"
-            if (checkSelfPermission(READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    READ_MEDIA_IMAGES
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                     askForPermissionMessage += "\n\nMake sure to accept \"Allow all\"!\n"
                 }
@@ -482,7 +493,8 @@ class MainActivity : ComponentActivity() {
             .setMessage(askForPermissionMessage)
             .setPositiveButton(android.R.string.ok) { dialog, _ ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (checkSelfPermission(
+                    if (ContextCompat.checkSelfPermission(
+                            this,
                             READ_MEDIA_IMAGES
                         ) != PackageManager.PERMISSION_GRANTED
                     ) {
@@ -508,10 +520,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun hasPermissions(ok: (() -> Unit), error: (() -> Unit)) {
-        if (checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ||
+        if (ContextCompat.checkSelfPermission(
+                this,
+                READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED ||
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                     && Environment.isExternalStorageManager()
-                    && checkSelfPermission(READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) ||
+                    && ContextCompat.checkSelfPermission(
+                this,
+                READ_MEDIA_IMAGES
+            ) == PackageManager.PERMISSION_GRANTED) ||
             (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
                     && Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
                     && Environment.isExternalStorageManager())
@@ -533,15 +551,22 @@ class MainActivity : ComponentActivity() {
                 30000, 30000, false, 0.5f, 0.5f
             )
 
-            wallpaperManager.getWallpaperFile(FLAG_LOCK)?.use {
-                drawables[2] =
-                    BitmapDrawable(resources, BitmapFactory.decodeFileDescriptor(it.fileDescriptor))
-            }
-            if (drawables[2] == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                drawables[2] = wallpaperManager.getDrawable(FLAG_LOCK)
-            }
-            if (drawables[2] == null) {
-                drawables[2] = wallpaperManager.getBuiltInDrawable(FLAG_LOCK)
+            // Separate lock-screen wallpapers (FLAG_LOCK) don't exist before Android N;
+            // pre-N devices only ever have the single system wallpaper loaded above.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                wallpaperManager.getWallpaperFile(FLAG_LOCK)?.use {
+                    drawables[2] =
+                        BitmapDrawable(
+                            resources,
+                            BitmapFactory.decodeFileDescriptor(it.fileDescriptor)
+                        )
+                }
+                if (drawables[2] == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    drawables[2] = wallpaperManager.getDrawable(FLAG_LOCK)
+                }
+                if (drawables[2] == null) {
+                    drawables[2] = wallpaperManager.getBuiltInDrawable(FLAG_LOCK)
+                }
             }
 
             runOnUiThread {
@@ -655,10 +680,12 @@ class AboutActivity : ComponentActivity() {
     private fun setHtmlText(textView: TextView, htmlString: String): TextView {
         return textView.apply {
             movementMethod = LinkMovementMethod()
-            text = Html.fromHtml(
-                htmlString,
-                Html.FROM_HTML_SEPARATOR_LINE_BREAK_DIV
-            )
+            text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Html.fromHtml(htmlString, Html.FROM_HTML_SEPARATOR_LINE_BREAK_DIV)
+            } else {
+                @Suppress("DEPRECATION")
+                Html.fromHtml(htmlString)
+            }
         }
     }
 }
