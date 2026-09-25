@@ -1,4 +1,4 @@
-# <img src="fastlane/metadata/android/en-US/images/icon.png" alt="Launcher icon" height="48"> WallpaperExport
+# WallpaperExport
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3%20or%20later-a32d2a?logo=GNU)](https://www.gnu.org/licenses/gpl-3.0)
 [![F-Droid](https://img.shields.io/f-droid/v/com.github.cvzi.wallpaperexport.svg?logo=f-droid)](https://f-droid.org/packages/com.github.cvzi.wallpaperexport/)
@@ -19,5 +19,4 @@ I did not want to include this permission in my app [DarkModeLiveWallpaper](http
 
 ## Screenshots
 
-| <img src="/fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" alt="Main Activity" /> | <img src="docs/images/PermissionScreen.png" alt="Permission Screen"/> |
-| --- | ---- |
+<img src="docs/images/PermissionScreen.png" alt="Permission Screen" />

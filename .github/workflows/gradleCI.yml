@@ -4,7 +4,6 @@ on:
   push:
     paths-ignore:
       - 'docs/**'
-      - 'fastlane/**'
       - '*.md'
   workflow_dispatch:
 

@@ -5,17 +5,21 @@ plugins {
 }
 
 android {
-    namespace = "com.github.cvzi.wallpaperexport"
+    namespace = "dev.danbrada.wallpaperexporter"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.github.cvzi.wallpaperexport"
+        applicationId = "dev.danbrada.wallpaperexporter"
         versionCode = 9
         versionName = "1.1.4"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
     }
 
+    // No keystore is committed to this repo. Supply your own via project properties to sign a
+    // release build (e.g. `--project-prop keystore=... --project-prop keystorepassword=... \
+    // --project-prop keystorealias=... --project-prop keystorekeypassword=...`); without one,
+    // `assembleRelease` produces an unsigned APK. Day-to-day testing should use `assembleDebug`.
     if (project.hasProperty("keystore")) {
         signingConfigs {
             create("release") {
@@ -23,18 +27,6 @@ android {
                 storePassword = project.property("keystorepassword") as String
                 keyAlias = project.property("keystorealias") as String
                 keyPassword = project.property("keystorekeypassword") as String
-                enableV1Signing = true
-                enableV2Signing = true
-                enableV3Signing = true
-            }
-        }
-    } else {
-        signingConfigs {
-            create("release") {
-                storeFile = rootProject.file("mykey.jks")
-                storePassword = "password"
-                keyAlias = "key0"
-                keyPassword = "password"
                 enableV1Signing = true
                 enableV2Signing = true
                 enableV3Signing = true
@@ -50,7 +42,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            if (project.hasProperty("keystore")) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
         debug {
             isMinifyEnabled = false

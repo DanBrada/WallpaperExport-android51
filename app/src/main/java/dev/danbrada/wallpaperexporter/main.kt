@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with WallpaperExport.  If not, see <https://www.gnu.org/licenses/>.
 */
-package com.github.cvzi.wallpaperexport
+package dev.danbrada.wallpaperexporter
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_IMAGES
@@ -60,8 +60,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.DragStartHelper
-import com.github.cvzi.wallpaperexport.databinding.ActivityAboutBinding
-import com.github.cvzi.wallpaperexport.databinding.ActivityMainBinding
+import dev.danbrada.wallpaperexporter.databinding.ActivityAboutBinding
+import dev.danbrada.wallpaperexporter.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -664,8 +664,6 @@ class AboutActivity : ComponentActivity() {
             )
 
             setHtmlText(textViewIssues, R.string.about_issues)
-
-            setHtmlText(textViewDonate, R.string.about_donate)
         }
     }
 
